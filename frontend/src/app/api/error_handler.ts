@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ErrorHandler {
     constructor(private toastr: ToastrService) {}
 
-    public handleError(error: Error | HttpErrorResponse) {
+    public handleError(error: Error | HttpErrorResponse): void {
         // notification system, once elected, goes here
         let errorMessage = '';
         if (
@@ -25,7 +25,7 @@ export class ErrorHandler {
         } else {
             errorMessage = JSON.stringify(error);
         }
-        let msg =
+        const msg =
             'Une erreur est survenue lors de la récupération des données sur le serveur.';
         this.toastr.error(msg, '', { positionClass: 'toast-top-right' });
     }

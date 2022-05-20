@@ -57,6 +57,7 @@ export class AuthInterceptor implements HttpInterceptor {
             return this.auth.performTokenRefresh().pipe(
                 mergeMap((data: TokenRefresh) => {
                     if (data && !!data.access_token) {
+                        this.refreshing = false;
                         localStorage.setItem('access_token', data.access_token);
                         this.token$.next(data.access_token);
                         // Fixme:
@@ -72,6 +73,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     );
                     this.errorHandler.handleError(error);
                     this.router.navigate(['/home']);
+                    localStorage.clear();
                     return from(this.auth.logout());
                 }),
                 finalize(() => {
