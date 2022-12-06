@@ -82,6 +82,10 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
         this.loadJsonSchema().subscribe((data: any) => {
             this.initForm(data);
             if (this.visit_id) {
+                console.debug(
+                    'this.visit_data',
+                    JSON.stringify(this.visit_data.json_data)
+                );
                 this.initJsonData(this.visit_data.json_data);
                 const visit_date = new Date(this.visit_data.date);
                 this.visitForm.controls.date.setValue({
@@ -96,6 +100,10 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
         // Visit edition json data initialisation
         this.jsonData = {};
         if (this.jsonSchema.steps) {
+            console.debug(
+                'initJsonData this.jsonSchema.steps',
+                this.jsonSchema.steps
+            );
             this.jsonSchema.steps.forEach((step, index) => {
                 this.jsonData[index + 1] = {};
                 step.layout.forEach((elt) => {
@@ -114,6 +122,7 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
             });
         } else {
             this.jsonData = visit_json_data; // TODO is it correct ?
+            console.debug('initJsonData this.jsonData', this.jsonData);
         }
         this.updateFormInput();
     }
@@ -128,9 +137,17 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
     }
     updateFormInput() {
         this.updatePartialLayout();
+        console.debug(
+            'this.jsonData',
+            JSON.stringify(this.jsonData),
+            this.currentStep,
+            this.jsonData[this.currentStep]
+        );
         this.formInputObject = {
             schema: this.jsonSchema.schema,
-            data: this.jsonData[this.currentStep],
+            data: this.jsonData[this.currentStep]
+                ? this.jsonData[this.currentStep]
+                : this.jsonData,
             layout: this.partialLayout,
         };
     }
@@ -144,6 +161,7 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
         this.updateFormInput();
     }
     updatePartialLayout() {
+        console.debug('this.jsonSchema.steps', this.jsonSchema.steps);
         if (this.jsonSchema.steps) {
             this.partialLayout =
                 this.jsonSchema.steps[this.currentStep - 1].layout;
@@ -154,6 +172,7 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
         }
         this.partialLayout[this.partialLayout.length - 1].expanded =
             this.advancedMode;
+        console.debug('this.partialLayout', this.partialLayout);
     }
     isFirstStep() {
         return this.currentStep === 1;
@@ -168,13 +187,33 @@ export class SiteVisitFormComponent implements OnInit, AfterViewInit {
         return this.currentStep === 1 && this.visitForm.get('date').invalid;
     }
     onJsonFormChange(e) {
-        this.jsonData[this.currentStep] = e;
+        console.debug(
+            'onJsonFormChange',
+            e,
+            JSON.stringify(e),
+            Object.keys(e).length
+        );
+        if (Object.keys(e).length > 0) {
+            this.jsonData[this.currentStep] = e;
+        }
     }
     getTotalJsonData() {
         let resp = {};
-        for (const key of Object.keys(this.jsonData)) {
-            resp = { ...resp, ...this.jsonData[key] };
+        console.log('getTotalJsonData resp', this.jsonSchema.steps);
+        console.debug(
+            'getTotalJsonData jsonData',
+            JSON.stringify(this.jsonData)
+        );
+
+        if (this.jsonSchema.steps) {
+            console.log('getTotalJsonData loop', this.jsonSchema.steps);
+            for (const key of Object.keys(this.jsonData)) {
+                resp = { ...resp, ...this.jsonData[key] };
+            }
+        } else {
+            resp = { ...this.jsonData };
         }
+        console.log('getTotalJsonData resp', resp);
         return resp;
     }
     toogleAdvancedMode() {

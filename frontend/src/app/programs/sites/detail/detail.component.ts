@@ -114,7 +114,7 @@ export class SiteDetailComponent
                     date: e.date,
                     author: e.author,
                     id: e.id_visit,
-                    json_data: e.json_data
+                    json_data: e.json_data,
                 };
                 this.loadJsonSchema().subscribe((jsonschema: any) => {
                     const schema = jsonschema.schema.properties;
@@ -146,6 +146,7 @@ export class SiteDetailComponent
                     }
                 });
                 this.attributes.push(visitData);
+                console.debug('ATTRIBUTES', this.attributes);
             });
         }
     }
@@ -178,6 +179,7 @@ export class SiteDetailComponent
     }
 
     editSiteVisit(visit_data) {
+        console.debug('Site Data', visit_data);
         visit_data.photos = this.photos.filter(
             (p) => p.visit_id === visit_data.id
         );

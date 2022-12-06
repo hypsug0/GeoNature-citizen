@@ -167,8 +167,11 @@ export class UserDashboardComponent implements OnInit {
                     // this.rowData(obs, coords);
                     // this.obsExport(obs);
                 });
-                if (this.observations.length === 0 && this.mysites.features.length > 0) {
-                    this.tab = 'sites'
+                if (
+                    this.observations.length === 0 &&
+                    this.mysites.features.length > 0
+                ) {
+                    this.tab = 'sites';
                 }
             } else {
                 this.observations = data[0].features;
@@ -253,7 +256,7 @@ export class UserDashboardComponent implements OnInit {
                     this.router.navigate(['/home']);
                 }
             })
-            .catch((err) => console.log('err', err));
+            .catch((err) => console.debug('err', err));
     }
 
     onExportPersonalData() {

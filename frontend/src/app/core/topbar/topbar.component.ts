@@ -147,7 +147,7 @@ export class TopbarComponent implements OnInit {
                     this.auth
                         .logout()
                         .then((logout) => {
-                            // console.log('Logout Status:', logout.status);
+                            // console.debug('Logout Status:', logout.status);
                         })
                         .catch((err) => {
                             // console.error('Logout error:', err);
@@ -157,7 +157,7 @@ export class TopbarComponent implements OnInit {
             );
             /*this.auth.ensureAuthorized().pipe(
         tap(user => {
-          console.log("ensureAuthorized result", user);
+          console.debug("ensureAuthorized result", user);
           if (user && user["features"] && user["features"].id_role) {
             this.username = user["features"].username;
             this.isAdmin = user["features"].admin ? true : false;
@@ -168,7 +168,7 @@ export class TopbarComponent implements OnInit {
           this.auth
             .logout()
             .then(logout => {
-              console.log("Logout Status:", logout.status);
+              console.debug("Logout Status:", logout.status);
             })
             .catch(err => {
               console.error("Logout error:", err);

@@ -149,7 +149,7 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
     // @HostListener("document:ObservationFilterEvent", ["$event"])
     // observationFilterEventHandler(e: CustomEvent) {
     // e.stopPropagation();
-    // console.log("FOURTR", this.obsList)
+    // console.debug("FOURTR", this.obsList)
     // this.obsList.observations = {
     // type: "FeatureCollection",
     // features: this.observations.features

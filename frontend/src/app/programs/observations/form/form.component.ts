@@ -375,7 +375,7 @@ export class ObsFormComponent implements AfterViewInit {
     }
 
     patchForm(updateData) {
-        // console.log("updateData", updateData)
+        // console.debug("updateData", updateData)
         const taxon = updateData.taxon || {
             media: updateData.taxref.media_url,
             taxref: updateData.taxref,

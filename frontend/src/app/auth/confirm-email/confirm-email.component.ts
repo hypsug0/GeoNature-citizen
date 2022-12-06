@@ -41,7 +41,7 @@ export class ConfirmEmailComponent implements OnInit {
                     this.confirmedMessage =
                         "Le lien de confirmation n'est pas valide.";
                     this.confirmResponse = error.error;
-                    console.log('confirm error', error);
+                    console.debug('confirm error', error);
                     setTimeout(() => {
                         this.router.navigate(['home']);
                     }, 3000);

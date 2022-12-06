@@ -22,7 +22,8 @@ declare let $: any;
 })
 export class ObsDetailComponent
     extends BaseDetailComponent
-    implements AfterViewInit {
+    implements AfterViewInit
+{
     constructor(
         private http: HttpClient,
         private route: ActivatedRoute,

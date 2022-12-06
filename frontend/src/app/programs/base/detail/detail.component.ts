@@ -22,8 +22,8 @@ export abstract class BaseDetailComponent {
     username = null;
 
     showPhoto(photo) {
-        // console.log('opening photo:');
-        // console.log(photo);
+        // console.debug('opening photo:');
+        // console.debug(photo);
         this.clickedPhoto = photo;
         $('#photoModal').modal('show');
     }

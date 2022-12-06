@@ -81,7 +81,7 @@ export class GncProgramsService implements OnInit {
                 ),
                 map((programs: Program[]) =>
                     programs.map((program) => {
-                        console.log('PRG', program);
+                        console.debug('PRG', program);
                         program.html_short_desc =
                             this.domSanitizer.bypassSecurityTrustHtml(
                                 program.short_desc
@@ -90,7 +90,7 @@ export class GncProgramsService implements OnInit {
                             this.domSanitizer.bypassSecurityTrustHtml(
                                 program.long_desc
                         );
-                        console.log('PROGRAM', program);
+                        console.debug('PROGRAM', program);
                         return program;
                     })
                 ),
