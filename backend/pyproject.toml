@@ -32,7 +32,7 @@ shapely = "^1.8.5.post1"
 flask-ckeditor = "^0.4.6"
 flask-cors = "^3.0.10"
 flask-caching = "^2.0.1"
-flask-migrate = "^4.0.4"
+flask-migrate = "^4.0.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"

@@ -28,3 +28,7 @@ class ObservationView(CustomTileView):
         "municipality",
     )
     can_create = False
+    can_edit = False
+    can_export = True
+    can_view_details = True
+    details_modal = True

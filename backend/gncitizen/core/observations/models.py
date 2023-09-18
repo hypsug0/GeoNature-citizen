@@ -38,6 +38,7 @@ class ObservationModel(ObserverMixinModel, TimestampMixinModel, db.Model):
     municipality = db.Column(db.String(100), nullable=True)
     geom = db.Column(Geometry("POINT", 4326))
     json_data = db.Column(JSONB, nullable=True)
+    test_int = db.Column(db.Integer)
 
     program_ref = db.relationship(
         "ProgramsModel", backref=db.backref("t_obstax", lazy="dynamic")

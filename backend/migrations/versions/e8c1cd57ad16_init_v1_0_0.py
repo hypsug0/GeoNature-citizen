@@ -19,6 +19,7 @@ depends_on = None
 
 
 def upgrade():
+    op.execute("create schema if not exists gnc_core")
     op.execute("create schema if not exists gnc_obstax")
     op.execute("create schema if not exists gnc_sites")
     op.create_table(

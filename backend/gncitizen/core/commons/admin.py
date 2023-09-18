@@ -23,18 +23,15 @@ def taxonomy_lists():
     taxonomy_lists = []
 
     taxa_lists = requests.get(taxhub_lists_url)
-    logger.debug(taxa_lists)
     if taxa_lists.status_code == 200:
         try:
             taxa_lists = taxa_lists.json()["data"]
-            logger.debug(taxa_lists)
             for taxa_list in taxa_lists:
                 taxonomy_lists.append(
                     (taxa_list["id_liste"], taxa_list["nom_liste"])
                 )
         except Exception as e:
             logger.critical(str(e))
-    logger.debug(taxonomy_lists)
     return taxonomy_lists
 
 
@@ -131,9 +128,6 @@ class GeometryView(CustomTileView):
     )
 
     def on_model_change(self, form, model, is_created):
-        logger.debug(f"data {form.data}")
-        logger.debug(f"geom_file {form.geom_file}")
-        logger.debug(f"model {dir(model)}")
         if form.data["geom_file"]:
             model.set_geom_from_geom_file()
 

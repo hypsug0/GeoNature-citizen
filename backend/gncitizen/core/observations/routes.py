@@ -20,9 +20,7 @@ from gncitizen.core.commons.models import MediaModel, ProgramsModel
 from gncitizen.core.users.models import UserModel
 from gncitizen.utils.env import MEDIA_DIR, admin, taxhub_lists_url
 from gncitizen.utils.errors import GeonatureApiError
-from gncitizen.utils.geo import (
-    get_municipality_id_from_wkb
-)
+from gncitizen.utils.geo import get_municipality_id_from_wkb
 from gncitizen.utils.jwt import get_id_role_if_exists, get_user_if_exists
 from gncitizen.utils.media import save_upload_files
 from gncitizen.utils.taxonomy import get_specie_from_cd_nom, mkTaxonRepository
@@ -97,9 +95,7 @@ def generate_observation_geojson(id_observation):
     result_dict = observation.ObservationModel.as_dict(True)
     result_dict["observer"] = {"username": observation.username}
     name = observation.ObservationModel.municipality
-    result_dict["municipality"] = {
-        "name": name
-    }
+    result_dict["municipality"] = {"name": name}
 
     # Populate "geometry"
     features = []
@@ -286,11 +282,11 @@ def post_observation():
         # If municipality is not provided: call API_CITY
         if not newobs.municipality:
             newobs.municipality = get_municipality_id_from_wkb(_coordinates)
-        
+
         # If taxon name is not provided: call taxhub
         if not newobs.name:
             taxon = get_specie_from_cd_nom(newobs.cd_nom)
-            newobs.name = taxon.get('nom_vern', '')
+            newobs.name = taxon.get("nom_vern", "")
 
         newobs.uuid_sinp = uuid.uuid4()
         db.session.add(newobs)
@@ -523,9 +519,7 @@ def get_program_observations(
         for observation in observations:
             feature = get_geojson_feature(observation.ObservationModel.geom)
             name = observation.ObservationModel.municipality
-            feature["properties"]["municipality"] = {
-                "name": name
-            }
+            feature["properties"]["municipality"] = {"name": name}
 
             # Observer
             feature["properties"]["observer"] = {
@@ -659,9 +653,7 @@ def get_all_observations() -> Union[FeatureCollection, Tuple[Dict, int]]:
         for observation in observations:
             feature = get_geojson_feature(observation.ObservationModel.geom)
             name = observation.ObservationModel.municipality
-            feature["properties"]["municipality"] = {
-                "name": name
-            }
+            feature["properties"]["municipality"] = {"name": name}
 
             # Observer
             feature["properties"]["observer"] = {
@@ -750,11 +742,7 @@ def get_observations_by_user_id(user_id):
                     func.json_build_array(
                         MediaModel.filename, MediaModel.id_media
                     )
-<<<<<<< Updated upstream
-                ).label("images")
-=======
                 ).label("images"),
->>>>>>> Stashed changes
             )
             .filter(ObservationModel.id_role == user_id)
             .join(
@@ -814,9 +802,7 @@ def get_observations_by_user_id(user_id):
         for observation in observations:
             feature = get_geojson_feature(observation.ObservationModel.geom)
             name = observation.ObservationModel.municipality
-            feature["properties"]["municipality"] = {
-                "name": name
-            }
+            feature["properties"]["municipality"] = {"name": name}
 
             # Observer
             feature["properties"]["observer"] = {
@@ -887,7 +873,14 @@ def update_observation():
     try:
         update_data = request.form
         update_obs = {}
-        for prop in ["cd_nom", "name", "count", "comment", "date", "municipality"]:
+        for prop in [
+            "cd_nom",
+            "name",
+            "count",
+            "comment",
+            "date",
+            "municipality",
+        ]:
             update_obs[prop] = update_data[prop]
         try:
             _coordinates = json.loads(update_data["geometry"])
@@ -976,8 +969,6 @@ def delete_observation(id_obs):
             return ("delete unauthorized"), 403
     except Exception as e:
         return {"message": str(e)}, 500
-<<<<<<< Updated upstream
-=======
 
 
 @obstax_api.route("/observations/medias", methods=["GET"])
@@ -1030,4 +1021,3 @@ def get_obs_medias():
         )
 
     return [media._asdict() for media in medias.all()]
->>>>>>> Stashed changes
