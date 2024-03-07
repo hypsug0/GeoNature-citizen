@@ -22,7 +22,8 @@ declare let $: any;
 })
 export class ObsDetailComponent
     extends BaseDetailComponent
-    implements AfterViewInit {
+    implements AfterViewInit
+{
     constructor(
         private http: HttpClient,
         private route: ActivatedRoute,
@@ -39,13 +40,12 @@ export class ObsDetailComponent
     ngAfterViewInit() {
         this.programService.getObsDetails(this.obs_id).subscribe((obs) => {
             this.obs = obs;
-            console.log(obs)
+            console.log(obs);
             this.photos = [];
-            this.photos = this.obs.properties.photos.map(
-                item => {
-                    item['url'] = MainConfig.API_ENDPOINT + item['url']
-                    return item
-                });
+            this.photos = this.obs.properties.photos.map((item) => {
+                item['url'] = MainConfig.API_ENDPOINT + item['url'];
+                return item;
+            });
 
             // setup map
             const map = L.map('map');

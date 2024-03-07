@@ -216,7 +216,7 @@ section .observations {
 .observations {
     margin: 0px;
     min-height: inherit;
-    height: calc(100vh - 137px);
+    height: calc(100vh - 106px);
     overflow: hidden;
 }
 

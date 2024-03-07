@@ -10,7 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { MainConfig } from '../../conf/main.config';
+// import { MainConfig } from '../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
+import { IConfig } from 'src/app/services/config.model';
 import { Program } from './programs.models';
 import { GncProgramsService } from '../api/gnc-programs.service';
 import { ProgramsResolve } from '../programs/programs-resolve.service';
@@ -26,17 +28,21 @@ import { Subject } from 'rxjs';
 })
 export class ProgramsComponent implements OnInit {
     programs$ = new Subject<Program[]>();
-    MainConfig = MainConfig;
+    // MainConfig = MainConfig;
+    protected frontendConfig: IConfig;
+    protected apiUrl: string;
     // programCount$ = this.programs$.pipe(count());
 
     constructor(
         @Inject(LOCALE_ID) readonly localeId: string,
         private route: ActivatedRoute,
         public activeModal: NgbActiveModal,
-        private programService: GncProgramsService
+        private programService: GncProgramsService,
+        private configService: AppConfigService
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
+        this.getConfig();
         this.route.data.subscribe((data: { programs: Program[] }) => {
             if (data.programs) {
                 this.programs$.next(data.programs);
@@ -46,5 +52,9 @@ export class ProgramsComponent implements OnInit {
                     .subscribe((programs) => this.programs$.next(programs));
             }
         });
+    }
+    getConfig(): void {
+        this.frontendConfig = this.configService.frontendConfig;
+        this.apiUrl = this.configService.apiUrl;
     }
 }

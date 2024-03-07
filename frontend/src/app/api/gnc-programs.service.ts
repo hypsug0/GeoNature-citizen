@@ -9,7 +9,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
 
 import { FeatureCollection, Feature } from 'geojson';
-
+import { AppConfigService } from '../services/config.service';
 import { MainConfig } from '../../conf/main.config';
 import { Program } from '../programs/programs.models';
 import {
@@ -49,37 +49,54 @@ const sorted = (property: string) => {
 };
 
 @Injectable({
-    deps: [
-        [new Optional(), new SkipSelf(), GncProgramsService],
-        HttpClient,
-        TransferState,
-        DomSanitizer,
-    ],
+    // deps: [
+    //     AppConfigService,
+    //     [new Optional(), new SkipSelf(), GncProgramsService],
+    //     HttpClient,
+    //     TransferState,
+    //     DomSanitizer,
+    // ],
     providedIn: 'root',
-    useFactory: (
-        instance: GncProgramsService | null,
-        http: HttpClient,
-        state: TransferState,
-        domSanitizer: DomSanitizer
-    ) => instance || new GncProgramsService(http, state, domSanitizer),
+    // useFactory: (
+    //     instance: GncProgramsService | null,
+    //     configService: AppConfigService,
+    //     http: HttpClient,
+    //     state: TransferState,
+    //     domSanitizer: DomSanitizer
+    // ) =>
+    //     instance ||
+    //     new GncProgramsService(configService, http, state, domSanitizer),
 })
-export class GncProgramsService implements OnInit {
-    private readonly URL = MainConfig.API_ENDPOINT;
+export class GncProgramsService {
+    private URL: string = MainConfig.API_ENDPOINT;
     programs: Program[];
     programs$ = new Subject<Program[]>();
 
     constructor(
         protected http: HttpClient,
         private state: TransferState,
-        protected domSanitizer: DomSanitizer
-    ) { }
-
-    ngOnInit(): void {
+        protected domSanitizer: DomSanitizer,
+        private configService: AppConfigService
+    ) {
+        console.debug('in GncProgramsService');
+        this.getConfig();
         this.programs = this.state.get(PROGRAMS_KEY, null as Program[]);
         this.programs$.next(this.programs);
     }
 
+    // ngOnInit(): void {
+    //     console.log('config service test', Object.keys(this.configService));
+    //     this.programs = this.state.get(PROGRAMS_KEY, null as Program[]);
+    //     this.programs$.next(this.programs);
+    // }
+    getConfig(): void {
+        console.log(
+            'GncProgramsService getConfig',
+            Object.keys(this.configService)
+        );
+    }
     getAllPrograms(): Observable<Program[]> {
+        console.log('config service test', Object.keys(this.configService));
         if (!this.programs) {
             return this.http.get<IGncFeatures>(`${this.URL}/programs`).pipe(
                 pluck('features'),
@@ -128,7 +145,7 @@ export class GncProgramsService implements OnInit {
 
     getProgramObservations(
         id: number,
-        per_page: number = 1000
+        per_page = 1000
     ): Observable<ObservationFeatureCollection> {
         const params = { id_program: `${id}`, per_page: `${per_page}` };
         return this.http
@@ -222,7 +239,8 @@ export class GncProgramsService implements OnInit {
             `${this.URL}/medias`,
             {
                 params,
-            });
+            }
+        );
     }
 
     private handleError<T>(operation = 'operation', result?: T) {

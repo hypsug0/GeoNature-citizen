@@ -5,6 +5,7 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { MainConfig } from '../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
 
 export interface Taxon {
     cd_nom: number;
@@ -38,22 +39,27 @@ export interface Taxon {
     providedIn: 'root',
 })
 export class TaxhubService {
-    private readonly URL = MainConfig.API_ENDPOINT;
+    //private readonly URL = MainConfig.API_ENDPOINT;
+    private readonly configService: AppConfigService;
+    private URL: string;
     taxon: any;
 
     constructor(
         protected http: HttpClient,
         protected domSanitizer: DomSanitizer
     ) {}
-
-    getTaxon(cd_nom: number): Observable<Taxon> {
+    ngOnInit(): void {
+        this.URL = this.configService.frontendConfig.API_TAXHUB;
+    }
+    getTaxon(cd_nom: string): Observable<Taxon> {
         return this.http
             .get<Taxon>(`${this.URL}/taxonomy/taxon/${cd_nom}`)
             .pipe(
                 map((taxon) => {
-                    taxon.nom_complet_html_sanitized = this.domSanitizer.bypassSecurityTrustHtml(
-                        taxon.nom_complet_html
-                    );
+                    taxon.nom_complet_html_sanitized =
+                        this.domSanitizer.bypassSecurityTrustHtml(
+                            taxon.nom_complet_html
+                        );
                     return taxon;
                 }),
                 // tap(taxon => {

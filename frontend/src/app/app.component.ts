@@ -7,19 +7,22 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { MainConfig } from '../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
 import { Router, NavigationStart } from '@angular/router';
 import { ModalsTopbarService } from './core/topbar/modalTopbar.service';
+import { IConfig } from './services/config.model';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
     encapsulation: ViewEncapsulation.None,
+    // providers: [AppConfigService],
 })
 export class AppComponent implements OnInit {
     title = 'GeoNature-citizen';
-    public MainConfig: any;
+    private frontendConfig: IConfig;
+    //private apiUrl: string;
     public backgroundImage: any;
     hideTopbar = false;
     hideFooter = false;
@@ -27,6 +30,7 @@ export class AppComponent implements OnInit {
     constructor(
         @Inject(LOCALE_ID) readonly localeId: string,
         private route: ActivatedRoute,
+        private configService: AppConfigService,
         private router: Router,
         private metaTagService: Meta,
         private titleService: Title,
@@ -43,17 +47,29 @@ export class AppComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-        this.MainConfig = MainConfig;
+    ngOnInit(): void {
+        this.frontendConfig = this.configService.frontendConfig;
+        // this.apiUrl = this.configService.apiUrl;
+        console.log('APP COMPONENT FRONTENDCONFIG', this.frontendConfig);
+        this.setBackgroundImage();
+        this.setMeta();
+    }
+    getConfig(): void {
+        this.frontendConfig = this.configService.frontendConfig;
+        // this.apiUrl = this.configService.apiUrl;
+    }
+    setBackgroundImage(): void {
         this.backgroundImage =
-            MainConfig.API_ENDPOINT + '/media/background.jpg';
+            this.configService.apiUrl + '/media/background.jpg';
+    }
+    setMeta(): void {
         this.metaTagService.addTags([
             {
                 name: 'keywords',
                 content:
                     'GeoNature-citizen ' +
-                    (this.MainConfig.META.keywords
-                        ? this.MainConfig.META.keywords
+                    (this.frontendConfig.FRONTEND.META.keywords
+                        ? this.frontendConfig.FRONTEND.META.keywords
                         : ''),
             },
             { name: 'robots', content: 'index, follow' },
@@ -63,17 +79,32 @@ export class AppComponent implements OnInit {
                 content: 'width=device-width, initial-scale=1',
             },
             { charset: 'UTF-8' },
-            { property: 'og:title', content: MainConfig.appName },
+            {
+                property: 'og:title',
+                content: this.frontendConfig.appName,
+            },
             {
                 property: 'og:description',
-                content: MainConfig.platform_teaser[this.localeId],
+                content:
+                    this.frontendConfig.FRONTEND.LOCALIZE.platform_teaser[
+                        this.localeId
+                    ],
             },
             { property: 'og:image', content: this.backgroundImage },
-            { property: 'og:url', content: MainConfig.URL_APPLICATION },
-            { property: 'twitter:title', content: MainConfig.appName },
+            {
+                property: 'og:url',
+                content: this.frontendConfig.URL_APPLICATION,
+            },
+            {
+                property: 'twitter:title',
+                content: this.frontendConfig.appName,
+            },
             {
                 property: 'twitter:description',
-                content: MainConfig.platform_teaser[this.localeId],
+                content:
+                    this.frontendConfig.FRONTEND.LOCALIZE.platform_teaser[
+                        this.localeId
+                    ],
             },
             { property: 'twitter:image', content: this.backgroundImage },
         ]);

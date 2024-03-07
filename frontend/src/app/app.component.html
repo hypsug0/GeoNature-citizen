@@ -1,19 +1,15 @@
 <div class="router-app d-flex flex-column justify-content-between">
     <header>
-        <app-topbar
-            class="fixed-top"
-            [displayTopbar]="MainConfig.FRONTEND.DISPLAY_TOPBAR && !hideTopbar"
-        ></app-topbar>
+        <app-topbar class="fixed-top"
+            [displayTopbar]="frontendConfig.FRONTEND.DISPLAY_TOPBAR && !hideTopbar"></app-topbar>
         <!-- <app-sidebar></app-sidebar> -->
     </header>
-    <div
-        [ngClass]="
-            MainConfig.FRONTEND.DISPLAY_TOPBAR  && !hideTopbar
+    <div [ngClass]="
+        frontendConfig.FRONTEND.DISPLAY_TOPBAR  && !hideTopbar
                 ? 'app-with-topbar'
                 : 'app-no-topbar'
-        "
-    >
+        ">
         <div class="container-fluid"><router-outlet></router-outlet></div>
     </div>
-    <app-footer *ngIf="MainConfig.FRONTEND.DISPLAY_FOOTER && !hideFooter"></app-footer>
+    <app-footer *ngIf="frontendConfig.FRONTEND.DISPLAY_FOOTER && !hideFooter"></app-footer>
 </div>

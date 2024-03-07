@@ -1,5 +1,6 @@
 import * as L from 'leaflet';
 import { MainConfig } from '../../../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
 
 declare let $: any;
 
@@ -9,7 +10,7 @@ export const markerIcon = L.icon({
 });
 
 export abstract class BaseDetailComponent {
-    readonly URL = MainConfig.API_ENDPOINT;
+    readonly URL: string;
     program_id: any;
     attributes = [];
     photos = [];

@@ -30,7 +30,8 @@ import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../auth/user-dashboard/user.service.service';
 import { ObservationsService } from './observations.service';
 import { ObservationFeatureCollection } from './observation.model';
-import { MainConfig } from '../../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
+import { IConfig } from 'src/app/services/config.model';
 
 @Component({
     selector: 'app-observations',
@@ -58,10 +59,12 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
     role_id: number;
     isValidator = false;
     username: string = null;
+    frontendConfig: IConfig;
 
     constructor(
         @Inject(LOCALE_ID) readonly localeId: string,
         private route: ActivatedRoute,
+        private configService: AppConfigService,
         private router: Router,
         private programService: GncProgramsService,
         public flowService: ModalFlowService,
@@ -87,6 +90,7 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.frontendConfig = this.configService.frontendConfig;
         this.breakpointObserver
             .observe(['(min-width: 700px)'])
             .subscribe((state: BreakpointState) => {
@@ -124,42 +128,8 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
                     });
                     this.programFeature = program;
                 });
-                this.titleService.setTitle(
-                    this.MainConfig.appName + ' - ' + this.program.title
-                );
-                this.metaTagService.updateTag({
-                    name: 'description',
-                    content: this.program.short_desc,
-                });
-                this.metaTagService.updateTag({
-                    property: 'og:title',
-                    content: MainConfig.appName + ' - ' + this.program.title,
-                });
-                this.metaTagService.updateTag({
-                    property: 'og:description',
-                    content: this.program.short_desc,
-                });
-                this.metaTagService.updateTag({
-                    property: 'og:image',
-                    content: this.program.image,
-                });
-                this.metaTagService.updateTag({
-                    property: 'og:url',
-                    content: MainConfig.URL_APPLICATION + this.router.url,
-                });
-                this.metaTagService.updateTag({
-                    property: 'twitter:title',
-                    content: MainConfig.appName + ' - ' + this.program.title,
-                });
-                this.metaTagService.updateTag({
-                    property: 'twitter:description',
-                    content: this.program.short_desc,
-                });
-                this.metaTagService.updateTag({
-                    property: 'twitter:image',
-                    content: this.program.image,
-                });
             });
+            this.setMeta();
         }
 
         const access_token = localStorage.getItem('access_token');
@@ -184,11 +154,11 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
         };
     }
 
-    addObsClicked() {
+    addObsClicked(): void {
         this.modalFlow.first.clicked();
     }
 
-    openValidateModal(validateModal: any, idObs: number) {
+    openValidateModal(validateModal: any, idObs: number): void {
         this.obsToValidate = this.observations.features.find(
             (obs) => obs.properties.id_observation === idObs
         );
@@ -211,7 +181,7 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
             this.obsToValidate.properties
         );
         return (
-            this.MainConfig.VERIFY_OBSERVATIONS_ENABLED &&
+            this.frontendConfig.VERIFY_OBSERVATIONS_ENABLED &&
             this.isValidator &&
             this.obsToValidate.properties.validation_status != 'VALIDATED' &&
             (!this.obsToValidate.properties.observer ||
@@ -244,5 +214,42 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
 
     ngOnDestroy(): void {
         if (this.modalRef) this.modalRef.close();
+    }
+    setMeta(): void {
+        this.titleService.setTitle(
+            this.frontendConfig.appName + ' - ' + this.program.title
+        );
+        this.metaTagService.updateTag({
+            name: 'description',
+            content: this.program.short_desc,
+        });
+        this.metaTagService.updateTag({
+            property: 'og:title',
+            content: this.frontendConfig.appName + ' - ' + this.program.title,
+        });
+        this.metaTagService.updateTag({
+            property: 'og:description',
+            content: this.program.short_desc,
+        });
+        this.metaTagService.updateTag({
+            property: 'og:image',
+            content: this.program.image,
+        });
+        this.metaTagService.updateTag({
+            property: 'og:url',
+            content: this.frontendConfig.URL_APPLICATION + this.router.url,
+        });
+        this.metaTagService.updateTag({
+            property: 'twitter:title',
+            content: this.frontendConfig.appName + ' - ' + this.program.title,
+        });
+        this.metaTagService.updateTag({
+            property: 'twitter:description',
+            content: this.program.short_desc,
+        });
+        this.metaTagService.updateTag({
+            property: 'twitter:image',
+            content: this.program.image,
+        });
     }
 }

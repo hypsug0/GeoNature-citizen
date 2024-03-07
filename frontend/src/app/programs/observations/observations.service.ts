@@ -1,37 +1,43 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MainConfig } from '../../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ObservationsService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private configService: AppConfigService
+    ) {}
 
     updateObservation(formData) {
-        let url = `${MainConfig.API_ENDPOINT}/observations`;
+        const url = `${this.configService.apiUrl}/observations`;
         return this.http.patch(url, formData);
     }
 
     postObservation(formData) {
-        let url = `${MainConfig.API_ENDPOINT}/observations`;
+        const url = `${this.configService.apiUrl}/observations`;
         return this.http.post(url, formData);
     }
 
     getStat() {
-        let url = `${MainConfig.API_ENDPOINT}/stats`;
+        const url = `${this.configService.apiUrl}/stats`;
         return this.http.get(url);
     }
 
     getNotValidatedObservations() {
-        let params = { validation_process: 'true', validation_status__notequal: 'VALIDATED' }
-        let url = `${MainConfig.API_ENDPOINT}/observations`;
+        const params = {
+            validation_process: 'true',
+            validation_status__notequal: 'VALIDATED',
+        };
+        const url = `${this.configService.apiUrl}/observations`;
         return this.http.get(url, { params });
     }
 
     getObservation(observationId: number) {
         return this.http.get<Object>(
-            `${MainConfig.API_ENDPOINT}/observations/${observationId}`
+            `${this.configService.apiUrl}/observations/${observationId}`
         );
     }
 }

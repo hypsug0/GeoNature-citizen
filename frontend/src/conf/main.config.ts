@@ -21,7 +21,7 @@ export const DefaulConfig = {
     META: {
         keywords: 'biodiversite enquetes participatif observations',
     },
-    about: true,
+    ABOUT: true,
     URL_APPLICATION: 'http://127.0.0.1:4200',
     REWARDS: true,
     termsOfUse: {
@@ -29,7 +29,7 @@ export const DefaulConfig = {
         en: 'assets/termsOfUse.pdf',
     },
     signup: 'optional', // never|optional|always
-    email_contact: false,
+    EMAIL_CONTACT: false,
     platform_intro: {
         fr: 'Bienvenue<br /> sur GeoNature Citizen',
         en: 'Welcome<br /> on GeoNature Citizen',

@@ -11,16 +11,17 @@ import { TaxhubService, Taxon } from '../../api/taxhub.service';
 })
 export class SpeciesComponent implements OnInit {
     title = 'fiche espèce';
-    specie_id: any;
+    specie_id: string;
     taxon: Taxon;
 
     constructor(private route: ActivatedRoute, public taxhub: TaxhubService) {
         this.route.params.subscribe((params) => {
             this.specie_id = params['id'];
+            console.log(this.specie_id);
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.taxhub.getTaxon(this.specie_id).subscribe((taxon) => {
             this.taxon = taxon;
             console.debug('TAXON', taxon);

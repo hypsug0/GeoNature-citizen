@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule, Inject } from '@angular/core';
+import { LOCALE_ID, NgModule, Inject, APP_INITIALIZER } from '@angular/core';
 import {
     BrowserModule,
     BrowserTransferStateModule,
@@ -33,6 +33,7 @@ import {
     SitesMapComponent,
     SiteMarkerPopupComponent,
 } from './programs/sites/map/map.component';
+import { AppConfigService } from './services/config.service';
 import { SitesComponent } from './programs/sites/sites.component';
 import { SiteFormComponent } from './programs/sites/siteform/siteform.component';
 import { SiteVisitFormComponent } from './programs/sites/form/form.component';
@@ -81,6 +82,11 @@ import { Bootstrap4FrameworkModule } from '@ajsf/bootstrap4';
 import { GNCFrameworkComponent } from './programs/base/jsonform/framework/framework.component';
 import { ImageUploadModule } from 'angular2-image-upload';
 import { UserSitesComponent } from './auth/user-dashboard/user-sites/user-sites.component';
+import { Subscription } from 'rxjs';
+
+export function setupAppConfigServiceFactory(service: AppConfigService) {
+    return (): Subscription => service.loadAppConfig();
+}
 
 @NgModule({
     imports: [
@@ -152,9 +158,15 @@ import { UserSitesComponent } from './auth/user-dashboard/user-sites/user-sites.
         UserSitesComponent,
     ],
     providers: [
+        {
+            provide: APP_INITIALIZER,
+            multi: true,
+            deps: [AppConfigService],
+            useFactory: setupAppConfigServiceFactory,
+        },
         AuthService,
         UtilsService,
-        GncProgramsService,
+        // GncProgramsService,
         ErrorHandler,
         // FlowService,
         ModalFlowService,

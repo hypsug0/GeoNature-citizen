@@ -12,7 +12,7 @@ import {
 
 import { UtilsService } from '../api/utils.service';
 import { GncProgramsService } from '../api/gnc-programs.service';
-
+import { AppConfigService } from '../services/config.service';
 import { ProgramsComponent } from './programs.component';
 
 describe('ProgramsComponent', () => {
@@ -22,7 +22,12 @@ describe('ProgramsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterTestingModule],
-            providers: [UtilsService, GncProgramsService, NgbModal],
+            providers: [
+                UtilsService,
+                AppConfigService,
+                GncProgramsService,
+                NgbModal,
+            ],
             declarations: [ProgramsComponent],
         }).compileComponents();
     }));

@@ -5,11 +5,13 @@ import {
 } from '@angular/common/http/testing';
 
 import { GncProgramsService } from './gnc-programs.service';
+import { AppConfigService } from '../services/config.service';
 
 describe('GncProgramsService', () => {
     beforeEach(() =>
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
+            providers: [AppConfigService],
         })
     );
 

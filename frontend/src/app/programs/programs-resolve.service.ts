@@ -5,7 +5,7 @@ import {
     ActivatedRouteSnapshot,
 } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
-import { take, mergeMap, catchError } from 'rxjs/operators';
+import { mergeMap, catchError } from 'rxjs/operators';
 
 import { GncProgramsService } from '../api/gnc-programs.service';
 import { Program } from './programs.models';
@@ -14,7 +14,9 @@ import { Program } from './programs.models';
     providedIn: 'root',
 })
 export class ProgramsResolve implements Resolve<Program[]> {
-    constructor(private programService: GncProgramsService) {}
+    constructor(private programService: GncProgramsService) {
+        console.debug('in ProgramsResolve');
+    }
 
     resolve(
         route: ActivatedRouteSnapshot,

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
-import { MainConfig } from '../../conf/main.config';
+import { AppConfigService } from 'src/app/services/config.service';
 
 // Adress is subject to change so unknown
 type Municipality = {
@@ -31,11 +31,14 @@ type Address = {
 })
 export class RefGeoService {
     private readonly URL =
-        'API_CITY' in MainConfig
-            ? MainConfig['API_CITY']
+        'API_CITY' in this.configService.frontendConfig
+            ? this.configService.frontendConfig.API_CITY
             : 'https://nominatim.openstreetmap.org/reverse';
 
-    constructor(protected http: HttpClient) { }
+    constructor(
+        protected http: HttpClient,
+        private configService: AppConfigService
+    ) {}
 
     getMunicipality(lat: number, lon: number): Observable<string> {
         const params = {
@@ -49,13 +52,13 @@ export class RefGeoService {
                 const city = address.village
                     ? address.village
                     : address.town
-                        ? address.town
-                        : address.city
-                            ? address.city
-                            : address.municipality
-                                ? address.municipality
-                                : null;
-                return `${city} (${address.postcode})`
+                    ? address.town
+                    : address.city
+                    ? address.city
+                    : address.municipality
+                    ? address.municipality
+                    : null;
+                return `${city} (${address.postcode})`;
             })
         );
     }

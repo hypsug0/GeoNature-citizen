@@ -4,7 +4,10 @@
         <div id="slider" class="carousel slide">
             <div class="carousel-inner">
                 <h2>
-                    {{ MainConfig.program_label[localeId] ? MainConfig.program_label[localeId] : 'Programme' }}
+                    {{ frontendConfig.FRONTEND.LOCALIZE.program_label[localeId] ?
+                    frontendConfig.FRONTEND.LOCALIZE.program_label[localeId]
+                    :
+                    'Programme' }}
                     <span>{{ program.title }}</span>
                 </h2>
                 <div class="carousel-item active">
@@ -49,7 +52,7 @@
                 <app-modalflow #modalFlowRef [coords]="coords" [program_id]="program_id"
                     [registration_required]="program?.registration_required" [form_message]="program?.form_message"
                     [modalversion]="
-                        AppConfig.FRONTEND.NEW_OBS_FORM_MODAL_VERSION
+                        frontendConfig.FRONTEND.NEW_OBS_FORM_MODAL_VERSION
                     " obs-form>
                 </app-modalflow>
             </app-obs-list>
@@ -120,8 +123,9 @@
                             [registration_required]="program.registration_required"
                             [form_message]="program?.form_message">
                             <button class="btn-big text-center text-nowrap text-uppercase" btn-open>
-                                {{ MainConfig.program_add_an_observation[ localeId ] ?
-                                MainConfig.program_add_an_observation[ localeId ] : 'Ajouter' }} </button>
+                                {{ frontendConfig.FRONTEND.LOCALIZE.program_add_an_observation[ localeId ] ?
+                                frontendConfig.FRONTEND.LOCALIZE.program_add_an_observation[ localeId ] : 'Ajouter' }}
+                            </button>
                         </app-modalflow>
                     </div>
                 </ng-template>
