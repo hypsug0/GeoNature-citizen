@@ -5,6 +5,8 @@ import { AppModule } from './app/app.module';
 import { MainConfig } from './conf/main.config';
 
 if (MainConfig.FRONTEND.PROD_MOD) {
+    console.log('MainConfig.FRONTEND.PROD_MOD', MainConfig.FRONTEND.PROD_MOD);
+    console.log('enableProdMode()', enableProdMode());
     enableProdMode();
 }
 
