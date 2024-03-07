@@ -1,13 +1,12 @@
 from flask_admin.actions import action
-from wtforms import SelectField
-
 from gncitizen.utils.admin import CustomJSONField, CustomTileView, json_formatter
 from server import db
+from wtforms import SelectField
 
 from .models import ObservationModel, ValidationStatus
 
 
-def enum_formatter(view, context, model, name):
+def enum_formatter(_view, _context, model, name):
     enum_attr = getattr(model, name)
     return enum_attr.value
 

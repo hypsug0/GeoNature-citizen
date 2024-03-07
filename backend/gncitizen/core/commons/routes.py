@@ -5,10 +5,6 @@ from flask import Blueprint, current_app, request, send_from_directory
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_jwt_extended import jwt_required
 from geojson import FeatureCollection
-from sqlalchemy import and_, case, desc, distinct
-from sqlalchemy.sql import func
-from utils_flask_sqla.response import json_resp
-
 from gncitizen.core.observations.models import ObservationMediaModel, ObservationModel
 from gncitizen.core.sites.admin import SiteTypeView
 from gncitizen.core.sites.models import (
@@ -23,6 +19,9 @@ from gncitizen.utils.env import MEDIA_DIR, admin
 from gncitizen.utils.helpers import get_filter_by_args, set_media_links
 from gncitizen.utils.jwt import get_id_role_if_exists
 from server import db
+from sqlalchemy import and_, case, desc, distinct
+from sqlalchemy.sql import func
+from utils_flask_sqla.response import json_resp
 
 from .admin import CustomFormView, GeometryView, ProgramView, ProjectView
 from .models import (
@@ -56,6 +55,22 @@ admin.add_view(
 )
 admin.add_view(SiteTypeView(SiteTypeModel, db.session, "3b - Types de site", category="Enquêtes"))
 admin.add_view(ProgramView(ProgramsModel, db.session, "4 - Programmes", category="Enquêtes"))
+
+
+@commons_api.route("config")
+def get_config():
+    keys = [
+        "API_TAXHUB",
+        "appName",
+        "URL_APPLICATION",
+        "API_CITY",
+        "REWARDS_ENABLED",
+        "DEFAULT_CENTER_LAT",
+        "DEFAULT_CENTER_LONG",
+        "VERIFY_OBSERVATIONS_ENABLED",
+        "FRONTEND",
+    ]
+    return {key: current_app.config.get(key) for key in keys}
 
 
 @commons_api.route("media/<filename>")
