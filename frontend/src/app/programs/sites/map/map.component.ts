@@ -75,6 +75,7 @@ export class SitesMapComponent extends BaseMapComponent {
                     'sites',
                     data.id_site
                 ]"
+                queryParamsHandling="preserve"
                 style="cursor:pointer"
                 title="Voir les détails sur ce site"
             >

@@ -345,14 +345,10 @@ def get_programs():
     """
     try:
         with_geom = "with_geom" in request.args
-        programs = (
-            ProgramsModel.query.filter_by(is_active=True)
-            # .join(
-            #     ProjectModel,
-            #     ProgramsModel.id_project == ProjectModel.id_project,
-            # )
-            .all()
-        )
+        id_project = request.args.get("id_project")
+        qs = ProgramsModel.query.filter_by(is_active=True)
+        qs = qs.filter_by(id_project=id_project) if id_project else qs
+        programs = qs.all()
         count = len(programs)
         features = []
         for program in programs:

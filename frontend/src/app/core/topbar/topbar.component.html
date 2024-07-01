@@ -1,6 +1,7 @@
 <nav class="navbar navbar-light navbar-expand-md fixed-top"
     [ngClass]="displayTopbar ? 'navbar-visible' : 'navbar-hidden'">
-    <a class="navbar-brand" routerLink="home" routerLinkActive="active" aria-label="GéoNature Citizen Home">
+    <a class="navbar-brand" routerLink="home" queryParamsHandling="preserve" routerLinkActive="active"
+        aria-label="GéoNature Citizen Home">
         <img src="{{ logoImage }}" loading="lazy" width="auto" height="80" class="d-inline-block align-top logo"
             [ngClass]="displayTopbar ? '' : 'hidden'" alt="GeoNature Citizen logo: flamengo origami" />
     </a>
@@ -15,8 +16,9 @@
                 <ul *ngIf="programs$ | async; let _programs" class="btn-group" [ngClass]="displayTopbar ? '' : 'hidden'"
                     role="group" aria-label="auth">
                     <li>
-                        <a routerLink="home" routerLinkActive="active" (click)="isCollapsed = true"
-                            class="btn my-2 my-sm-0 rounded-0" i18n="home@@home" title="Accueil">Accueil</a>
+                        <a routerLink="home" queryParamsHandling="preserve" routerLinkActive="active"
+                            (click)="isCollapsed = true" class="btn my-2 my-sm-0 rounded-0" i18n="home@@home"
+                            title="Accueil">Accueil</a>
                     </li>
                     <li>
                         <a class="btn my-2 my-sm-0 rounded-0" (click)="programs(); isCollapsed = true"
@@ -29,8 +31,9 @@
                         </a>
                     </li>
                     <li *ngIf="canDisplayAbout">
-                        <a class="btn my-2 my-sm-0 rounded-0" routerLink="/about" (click)="isCollapsed = !isCollapsed"
-                            routerLinkActive="active" i18n="about@@about" title="A propos">A propos</a>
+                        <a class="btn my-2 my-sm-0 rounded-0" routerLink="/about" queryParamsHandling="preserve"
+                            (click)="isCollapsed = !isCollapsed" routerLinkActive="active" i18n="about@@about"
+                            title="A propos">A propos</a>
                     </li>
                     <li *ngIf="isAdmin">
                         <a [href]="adminUrl" target="_blank" class="btn my-2 my-sm-0 rounded-0" i18n="admin@@admin"
@@ -38,9 +41,9 @@
                         </a>
                     </li>
                     <li *ngIf="MainConfig.VERIFY_OBSERVATIONS_ENABLED && isValidator">
-                        <a routerLink="/observations/not_validated" routerLinkActive="active"
-                            class="btn my-2 my-sm-0 rounded-0" i18n="validation@@validation" title="Validation"
-                            (click)="isCollapsed = !isCollapsed">Validation</a>
+                        <a routerLink="/observations/not_validated" queryParamsHandling="preserve"
+                            routerLinkActive="active" class="btn my-2 my-sm-0 rounded-0" i18n="validation@@validation"
+                            title="Validation" (click)="isCollapsed = !isCollapsed">Validation</a>
                     </li>
                 </ul>
                 <div class="btn-group navbar-login" *ngIf="canSignup && !hideAuth">
@@ -52,7 +55,7 @@
                     <ng-template #connected>
                         <a placement="bottom" i18n-ngbTooltip="my Dasboard Link@@myDasboardLink"
                             ngbTooltip="Mon tableau de bord" (click)="isCollapsed = !isCollapsed"
-                            routerLink="mydashboard" routerLinkActive="active">
+                            routerLink="mydashboard" queryParamsHandling="preserve" routerLinkActive="active">
                             <i *ngIf="!userAvatar" class="fa fa-fw fa-user-circle"></i>
                             <div *ngIf="userAvatar" class="avatar-wrapper" [style.background-image]="
                                     'url(' + userAvatar + ')'

@@ -27,6 +27,7 @@ import { Subject } from 'rxjs';
 export class ProgramsComponent implements OnInit {
     programs$ = new Subject<Program[]>();
     MainConfig = MainConfig;
+    projectId: string | null = null;
     // programCount$ = this.programs$.pipe(count());
 
     constructor(
@@ -34,7 +35,11 @@ export class ProgramsComponent implements OnInit {
         private route: ActivatedRoute,
         public activeModal: NgbActiveModal,
         private programService: GncProgramsService
-    ) {}
+    ) {
+        this.route.queryParams.subscribe((params) => {
+            this.projectId = params['projectId'];
+        });
+    }
 
     ngOnInit() {
         this.route.data.subscribe((data: { programs: Program[] }) => {
@@ -42,7 +47,7 @@ export class ProgramsComponent implements OnInit {
                 this.programs$.next(data.programs);
             } else {
                 this.programService
-                    .getAllPrograms()
+                    .getAllPrograms(this.projectId)
                     .subscribe((programs) => this.programs$.next(programs));
             }
         });

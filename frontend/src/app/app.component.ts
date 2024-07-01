@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     public backgroundImage: any;
     hideTopbar = false;
     hideFooter = false;
+    projectId: number;
 
     constructor(
         @Inject(LOCALE_ID) readonly localeId: string,
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
         this.route.queryParams.subscribe((params) => {
             this.hideTopbar = 'hideTopbar' in params;
             this.hideFooter = 'hideFooter' in params;
+            this.projectId = params['projectId'];
         });
     }
 

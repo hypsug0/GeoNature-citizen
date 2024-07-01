@@ -139,6 +139,7 @@ export class ObsMapComponent extends BaseMapComponent {
                     'observations',
                     data.id_observation
                 ]"
+                queryParamsHandling="preserve"
                 style="cursor:pointer"
                 title="Voir les détails"
             >

@@ -5,6 +5,7 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
     Router,
+    ActivatedRoute,
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -16,10 +17,17 @@ import { Program } from './programs.models';
     providedIn: 'root',
 })
 export class UniqueProgramGuard implements CanActivate, CanActivateChild {
+    projectId: string | null;
+
     constructor(
         private programService: GncProgramsService,
-        private router: Router
-    ) {}
+        private router: Router,
+        private route: ActivatedRoute
+    ) {
+        this.route.queryParams.subscribe((params) => {
+            this.projectId = params['projectId'];
+        });
+    }
 
     canActivate(
         next: ActivatedRouteSnapshot,
@@ -27,7 +35,7 @@ export class UniqueProgramGuard implements CanActivate, CanActivateChild {
     ): Observable<boolean> | Promise<boolean> | boolean {
         // console.warn("UniqueProgramGuard::getAllPrograms");
 
-        return this.programService.getAllPrograms().pipe(
+        return this.programService.getAllPrograms(this.projectId).pipe(
             map((p: Program[]) => {
                 const count = p ? p.length : 0;
                 const programs = p ? p : undefined;

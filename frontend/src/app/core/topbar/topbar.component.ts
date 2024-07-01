@@ -35,6 +35,7 @@ export class TopbarComponent implements OnInit {
     userAvatar: string;
     logoImage: string;
     hideAuth = false;
+    projectId: string | null;
 
     @Input()
     displayTopbar: boolean;
@@ -50,6 +51,9 @@ export class TopbarComponent implements OnInit {
         const tmp = localStorage.getItem('username');
         this.username = tmp ? tmp.replace(/\"/g, '') : 'Anonymous';
         this.logoImage = MainConfig.API_ENDPOINT + '/media/logo.png';
+        this.route.queryParams.subscribe((params) => {
+            this.projectId = params['projectId'];
+        });
         this.route.data
             .pipe(
                 tap((data: { programs: Program[] }) => {
@@ -58,7 +62,7 @@ export class TopbarComponent implements OnInit {
                     } else {
                         // console.warn("topbar::getAllPrograms");
                         this.programService
-                            .getAllPrograms()
+                            .getAllPrograms(this.projectId)
                             .subscribe((programs) => {
                                 this.programs$.next(programs);
                             });

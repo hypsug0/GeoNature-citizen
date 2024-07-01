@@ -7,6 +7,7 @@ import {
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
+import { objectCleaner } from './utils.service';
 
 import { FeatureCollection, Feature } from 'geojson';
 
@@ -72,42 +73,53 @@ export class GncProgramsService implements OnInit {
         protected http: HttpClient,
         private state: TransferState,
         protected domSanitizer: DomSanitizer
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.programs = this.state.get(PROGRAMS_KEY, null as Program[]);
         this.programs$.next(this.programs);
     }
 
-    getAllPrograms(): Observable<Program[]> {
+    getAllPrograms(projectId: string): Observable<Program[]> {
         if (!this.programs) {
-            return this.http.get<IGncFeatures>(`${this.URL}/programs`).pipe(
-                pluck('features'),
-                map((features: IGncProgram[]) =>
-                    features.map((feature) => feature.properties)
-                ),
-                map((programs: Program[]) =>
-                    programs.map((program) => {
-                        program.html_short_desc =
-                            this.domSanitizer.bypassSecurityTrustHtml(
-                                program.short_desc
-                            );
-                        program.html_long_desc =
-                            this.domSanitizer.bypassSecurityTrustHtml(
-                                program.long_desc
-                            );
-                        return program;
-                    })
-                ),
-                map((programs) =>
-                    programs.sort(sorted(MainConfig['program_list_sort']))
-                ),
-                tap((programs) => {
-                    this.state.set(PROGRAMS_KEY, programs as Program[]);
-                    this.programs$.next(programs);
-                }),
-                catchError(this.handleError<Program[]>('getAllPrograms', []))
-            );
+            const initParams: { [index: string]: string } = {
+                id_project: projectId,
+            };
+            console.log('projectId', projectId);
+            const params = objectCleaner(initParams);
+            return this.http
+                .get<IGncFeatures>(`${this.URL}/programs`, {
+                    params,
+                })
+                .pipe(
+                    pluck('features'),
+                    map((features: IGncProgram[]) =>
+                        features.map((feature) => feature.properties)
+                    ),
+                    map((programs: Program[]) =>
+                        programs.map((program) => {
+                            program.html_short_desc =
+                                this.domSanitizer.bypassSecurityTrustHtml(
+                                    program.short_desc
+                                );
+                            program.html_long_desc =
+                                this.domSanitizer.bypassSecurityTrustHtml(
+                                    program.long_desc
+                                );
+                            return program;
+                        })
+                    ),
+                    map((programs) =>
+                        programs.sort(sorted(MainConfig['program_list_sort']))
+                    ),
+                    tap((programs) => {
+                        this.state.set(PROGRAMS_KEY, programs as Program[]);
+                        this.programs$.next(programs);
+                    }),
+                    catchError(
+                        this.handleError<Program[]>('getAllPrograms', [])
+                    )
+                );
         } else {
             return this.programs$;
         }
@@ -222,7 +234,8 @@ export class GncProgramsService implements OnInit {
             `${this.URL}/medias`,
             {
                 params,
-            });
+            }
+        );
     }
 
     private handleError<T>(operation = 'operation', result?: T) {

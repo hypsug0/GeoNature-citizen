@@ -3,6 +3,7 @@ import {
     Resolve,
     RouterStateSnapshot,
     ActivatedRouteSnapshot,
+    ActivatedRoute,
 } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 import { take, mergeMap, catchError } from 'rxjs/operators';
@@ -14,7 +15,15 @@ import { Program } from './programs.models';
     providedIn: 'root',
 })
 export class ProgramsResolve implements Resolve<Program[]> {
-    constructor(private programService: GncProgramsService) {}
+    projectId: string | null = null;
+    constructor(
+        private programService: GncProgramsService,
+        private route: ActivatedRoute
+    ) {
+        this.route.queryParams.subscribe((params) => {
+            this.projectId = params['projectId'];
+        });
+    }
 
     resolve(
         route: ActivatedRouteSnapshot,
@@ -22,7 +31,7 @@ export class ProgramsResolve implements Resolve<Program[]> {
     ): Observable<Program[]> | Observable<never> {
         // console.warn("resolve::getAllPrograms");
 
-        return this.programService.getAllPrograms().pipe(
+        return this.programService.getAllPrograms(this.projectId).pipe(
             catchError((error) => {
                 console.error(error);
                 //window.alert(error);
