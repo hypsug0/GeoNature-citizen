@@ -23,6 +23,7 @@ import { ObservationsService } from '../programs/observations/observations.servi
 export class HomeComponent implements OnInit, AfterViewChecked {
     programs: Program[];
     fragment: string;
+    projectId: number;
     platform_teaser: SafeHtml;
     platform_intro: SafeHtml;
     MainConfig = MainConfig;
@@ -42,25 +43,31 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     ) {}
 
     ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            this.projectId = parseInt(params['projectId']);
+        });
         this.route.data.subscribe((data: { programs: Program[] }) => {
-            this.programs = data.programs;
+            this.programs = this.projectId
+                ? data.programs.filter((e) => e.id_project == this.projectId)
+                : data.programs;
+            console.log('[data.programs]', this.programs);
             this.observationsService
-                .getStat()
+                .getStat(this.projectId)
                 .subscribe((stats) => (this.stats = stats));
             if (this.programs.length === 1) {
-                const p = this.programs[0]
-                this.router.navigate([
-                    '/programs',
-                    p.id_program,
-                    p.module.name
-                ]);
+                const p = this.programs[0];
+                this.router.navigate(
+                    ['/programs', p.id_program, p.module.name],
+                    { queryParams: { projectId: this.projectId } }
+                );
             }
         });
         this.route.fragment.subscribe((fragment) => {
             this.fragment = fragment;
         });
 
-        this.backgroundImage = MainConfig.API_ENDPOINT + '/media/background.jpg';
+        this.backgroundImage =
+            MainConfig.API_ENDPOINT + '/media/background.jpg';
         this.metaTagService.updateTag({
             name: 'description',
             content: this.MainConfig.platform_teaser.fr,

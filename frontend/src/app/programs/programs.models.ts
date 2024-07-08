@@ -1,6 +1,7 @@
 import { SafeHtml } from '@angular/platform-browser';
 
 export class Program {
+    id_project?: number;
     id_program: number;
     title: string;
     short_desc: string;

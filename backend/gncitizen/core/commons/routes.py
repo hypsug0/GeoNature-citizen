@@ -113,13 +113,47 @@ def get_modules():
 @commons_api.route("/stats", methods=["GET"])
 @json_resp
 def get_stat():
+    id_project = request.args.get("id_project", None)
     try:
-        stats = {}
-        stats["nb_obs"] = ObservationModel.query.count()
-        stats["nb_user"] = UserModel.query.count()
-        stats["nb_program"] = ProgramsModel.query.filter(ProgramsModel.is_active).count()
-        stats["nb_espece"] = ObservationModel.query.distinct(ObservationModel.cd_nom).count()
-        return (stats, 200)
+        # project = ProjectModel.query.filter_by(id_project=pk).first()
+        query = (
+            db.session.query(
+                (
+                    func.count(distinct(ObservationModel.id_observation))
+                    + func.count(distinct(VisitModel.id_visit))
+                ).label("observations"),
+                func.count(
+                    distinct(ObservationModel.id_role),
+                ).label("registered_contributors"),
+                func.count(distinct(ProgramsModel.id_program)).label("programs"),
+                func.count(distinct(ObservationModel.cd_nom)).label("taxa"),
+                func.count(distinct(SiteModel.id_site)).label("sites"),
+            )
+            .select_from(ProjectModel)
+            .join(ProgramsModel, ProgramsModel.id_project == ProjectModel.id_project)
+            .outerjoin(
+                ObservationModel,
+                ObservationModel.id_program == ProgramsModel.id_program,
+            )
+            .outerjoin(SiteModel, SiteModel.id_program == ProgramsModel.id_program)
+            .outerjoin(VisitModel, VisitModel.id_site == SiteModel.id_site)
+            .filter(ProgramsModel.is_active)
+        )
+        if id_project:
+            query = query.filter(ProjectModel.id_project == id_project)
+
+        return query.first()._asdict()
+
+        # stats = {}
+        # stats["nb_obs"] = (
+        #     ObservationModel.query.filter(id_project=id_project).count()
+        #     if id_project
+        #     else ObservationModel.query.filter(id_project=id_project).count()
+        # )
+        # stats["nb_user"] = UserModel.query.count()
+        # stats["nb_program"] = ProgramsModel.query.filter(ProgramsModel.is_active).count()
+        # stats["nb_espece"] = ObservationModel.query.distinct(ObservationModel.cd_nom).count()
+        # return (stats, 200)
     except Exception as e:
         current_app.logger.critical("[get_observations] Error: %s", str(e))
         return {"message": str(e)}, 400

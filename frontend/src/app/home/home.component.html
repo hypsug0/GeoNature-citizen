@@ -14,7 +14,7 @@
         <div class="panel panel-teal panel-widget border-right">
             <div class="no-padding">
                 <em class="fa fa-xl fa-search color-primary"></em>
-                <div class="large">{{ stats.nb_obs }}</div>
+                <div class="large">{{ stats.observations }}</div>
                 <div class="text-muted" i18n="Observations@@observations">Observations</div>
             </div>
         </div>
@@ -23,7 +23,7 @@
         <div class="panel panel-blue panel-widget border-right">
             <div class="no-padding">
                 <em class="fa fa-xl fa fa-leaf color-secondary"></em>
-                <div class="large">{{ stats.nb_espece }}</div>
+                <div class="large">{{ stats.taxa }}</div>
                 <div class="text-muted" i18n="species@@species">Espèces</div>
             </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="panel panel-orange panel-widget border-right">
             <div class="no-padding">
                 <em class="fa fa-xl fa-users color-primary"></em>
-                <div class="large">{{ stats.nb_user }}</div>
+                <div class="large">{{ stats.registered_contributors }}</div>
                 <div class="text-muted" i18n="Observers@@observers">Observateurs</div>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="panel panel-red panel-widget">
             <div class="no-padding">
                 <em class="fa fa-xl fa fas fa-share-alt color-secondary"></em>
-                <div class="large">{{ stats.nb_program }}</div>
+                <div class="large">{{ stats.programs }}</div>
                 <div class="text-muted" [innerHtml]="
                         MainConfig.programs_label[localeId]
                             ? MainConfig.programs_label[localeId]
