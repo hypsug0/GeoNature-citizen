@@ -9,8 +9,8 @@
                         Toutes espèces
                     </option>
                     <option *ngFor="let s of surveySpecies" [ngValue]="s">
-                        {{ !!s.nom_francais ? s.nom_francais : s.taxref?.nom_vern }}
-                        <span *ngIf="MainConfig.taxonDisplaySciName">(<i>{{ s.taxref?.nom_complet }}</i>)</span>
+                        {{ s.nom_francais || s.taxref?.nom_vern }}
+                        <span *ngIf="MainConfig.taxonDisplaySciName">(<i>{{ s.taxref?.lb_nom}}</i>)</span>
                     </option>
                 </select>
 

@@ -122,6 +122,7 @@ export class ObsComponent extends ProgramBaseComponent implements OnInit {
                             : b.taxref.nom_vern;
                         return tax_a.localeCompare(tax_b);
                     });
+                    console.log('OBS surveySpecies', this.surveySpecies);
                     this.programFeature = program;
                 });
                 this.titleService.setTitle(

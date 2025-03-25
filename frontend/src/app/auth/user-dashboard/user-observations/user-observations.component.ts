@@ -35,17 +35,18 @@ export class UserObsComponent extends ObsComponent implements OnInit {
             });
         this.observations = this.myObs;
         // Create species list for filtering
-        let all_species = [];
-        let uniq_cd_nom_list = [];
+        const all_species = [];
+        const uniq_cd_nom_list = [];
         this.observations.features
             .map((f) => f.properties)
             .forEach((props) => {
-                let cd_nom = props.taxref.cd_nom;
+                const cd_nom = props.taxref.cd_nom;
                 if (!uniq_cd_nom_list.includes(cd_nom)) {
                     uniq_cd_nom_list.push(cd_nom);
                     all_species.push(props);
                 }
             });
         this.surveySpecies = all_species;
+        console.log('this.surveySpecies', this.surveySpecies);
     }
 }

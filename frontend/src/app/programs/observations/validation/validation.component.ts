@@ -51,8 +51,8 @@ export class ValidationComponent implements OnInit {
         new EventEmitter();
     program: FeatureCollection;
     taxonomyListID: number;
-    surveySpecies$: Observable<TaxonomyList>;
-    surveySpecies: TaxonomyList;
+    forListSpecies$: Observable<TaxonomyList>;
+    forListSpecies: TaxonomyList;
     taxonSelectInputThreshold = taxonSelectInputThreshold;
     taxonAutocompleteInputThreshold = taxonAutocompleteInputThreshold;
     taxonDisplayImageWhenUnique = taxonDisplayImageWhenUnique;
@@ -109,7 +109,7 @@ export class ValidationComponent implements OnInit {
                 this.program = result;
                 this.taxonomyListID =
                     this.program.features[0].properties.taxonomy_list;
-                this.surveySpecies$ = this.programService
+                this.forListSpecies$ = this.programService
                     .getProgramTaxonomyList(this.taxonomyListID)
                     .pipe(
                         tap((species) => {
@@ -126,7 +126,7 @@ export class ValidationComponent implements OnInit {
                             this.selectPropositionTaxon();
                         })
                     );
-                this.surveySpecies$.subscribe((res: TaxonomyList) => {
+                this.forListSpecies$.subscribe((res: TaxonomyList) => {
                     res.sort((a, b): number => {
                         const tax_a = a.nom_francais
                             ? a.nom_francais
@@ -136,7 +136,7 @@ export class ValidationComponent implements OnInit {
                             : b.taxref.nom_vern;
                         return tax_a.localeCompare(tax_b);
                     });
-                    this.surveySpecies = res;
+                    this.forListSpecies = res;
                 });
             });
 
