@@ -50,7 +50,8 @@
                     class="form-group col-lg-12 d-inline-flex obs-images">
                     <div class="scroll-img" [class.ng-valid]="selectedTaxon" [class.ng-invalid]="!selectedTaxon">
                         <div *ngFor="let s of surveySpecies">
-                            <div class="obs-img default-img" [class.selected]="isSelectedTaxon(s)">
+                            <div class="obs-img default-img" [class.selected]="isSelectedTaxon(s)"
+                                (click)="onTaxonSelected(s)">
                                 <img [src]="
                                 s.medias && !!s.medias.length
                                     ? MainConfig.API_TAXHUB +

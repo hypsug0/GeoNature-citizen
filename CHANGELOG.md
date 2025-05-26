@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## [x.x.x](Lien vers le tag) next - 202x-xx-xx
+## 1.3.0 - 2025-03-31
+
+> [!WARNING]  
+> **Require TaxHub 2.x.x (i.e. GeoNature >= 2.15.x)**
 
 ### 🚀 Main new features
 
@@ -9,34 +12,41 @@
 * Taxons seach in programs is now based on observed taxons
 * If no photo is added to an observation and if an image is available for this to taxa in TaxHub, then this image is displayed on the Congrats popup
 * Observation name displayed in program observations list is based on this order:
-  *  'nom_francais'
-  *  'taxref.nom_vern'
-  *  'taxref.nom_valide'
-  *  'taxref.nom_complet'
-  *  'taxref.lb_nom'
-  *  'taxref.cd_nom'
+  * 'nom_francais'
+  * 'taxref.nom_vern'
+  * 'taxref.nom_valide'
+  * 'taxref.nom_complet'
+  * 'taxref.lb_nom'
+  * 'taxref.cd_nom'
 
 ### Development
 
 * Add calls to two TaxHub API routes in order to get media types and bibattribut.
-* Add component taxonomy-research which calls `allnamebylist` TaxHub API route in Form Observation Program 
+* Add component taxonomy-research which calls `allnamebylist` TaxHub API route in Form Observation Program
 * Remove TaxHub list from cache backend
 
 ### Release note
 
-* To install or update to this version of GeoNature-citizen, you need TaxHub version 2.0.0 minimum.
+* To install or update to this version of GeoNature-citizen, you need TaxHub version 2.0.0 minimum (GeoNature >= 2.15).
 
-
-## 1.2.0-dev - 202x-xx-xx
+> [!WARNING]  
+> **Last version compatible with TaxHub 1.x.x (i.e. GeoNature <= 2.14.x)**
 
 ### Main new features
 
-* Add id_observation to observations list in backoffice (#428 by @hypsug0)
+* Add `id_observation` to observations list in backoffice (#428 by @hypsug0)
+* Add compatibility with Python 3.12, revoke compatibility with Python 3.8 (#406 by @hypsug0)
+* Use BaseLayers sets in conf and impove map in add-site form component. cf. #411, #413, #414 (#415 by @xavyeah39)
+* Add sites count stats on home (#438 by @andriacap)
 
 ### Fixes
 
 * Standardization of frontend map components between site and observation modules (#415 by @xavyeah39)
-* Fix password scratch when user profile edited from backoffice, cf. #420 (#429 by @hypsug0)
+* Fix password scratch when user profile edited from backoffice, cf. #420 (#429, #446 by @hypsug0)
+* Fix clicnat-citizen URL (#433 by @PaulLabruyere)
+* Fix URL redirection to backoffice (#435 by @andriacap)
+* Avoid using single page application to use server side rendering only (#439 by @PaulLabruyere)
+* Fix thumbnail label not clickable on shot species list (#443 by @hypsyg0)
 
 ## 1.1.0 - 2024-04-06
 

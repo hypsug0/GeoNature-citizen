@@ -23,7 +23,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs/operators';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Point, Position } from 'geojson';
 import { GncProgramsService } from '../../../api/gnc-programs.service';
 import { LeafletMouseEvent } from 'leaflet';
 import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
@@ -181,7 +181,12 @@ export class ObsFormComponent implements AfterViewInit {
         }
         this.mapService.coordsChange.subscribe((value) => {
             this.coords = value;
-            this.obsForm.patchValue({ geometry: this.coords });
+            this.obsForm.patchValue({
+                geometry: <Point>{
+                    type: 'Point',
+                    coordinates: <Position>[this.coords.x, this.coords.y],
+                },
+            });
             if (this.mapVars.minimapMarker)
                 this.formMap.removeLayer(this.mapVars.minimapMarker);
             this.mapVars.minimapMarker = L.marker(
@@ -240,9 +245,9 @@ export class ObsFormComponent implements AfterViewInit {
                                         map((species: TaxonomyList) => {
                                             if (
                                                 this.taxaCount <
-                                                this
-                                                    .taxonAutocompleteInputThreshold
-                                                && this.taxaCount > 1
+                                                    this
+                                                        .taxonAutocompleteInputThreshold &&
+                                                this.taxaCount > 1
                                             ) {
                                                 return species.sort((a, b) => {
                                                     const taxA =
@@ -257,17 +262,16 @@ export class ObsFormComponent implements AfterViewInit {
                                                         taxB
                                                     );
                                                 });
-                                            }
-                                            else if (this.taxaCount == 1){
-                                                this.onTaxonSelected(this.taxa[0]);
-                                            }   
-                                            else {
+                                            } else if (this.taxaCount == 1) {
+                                                this.onTaxonSelected(
+                                                    this.taxa[0]
+                                                );
+                                            } else {
                                                 return species;
                                             }
                                         })
                                     );
-                            }
-                            else {
+                            } else {
                                 this.loading = false;
                                 return [];
                             }
@@ -393,7 +397,15 @@ export class ObsFormComponent implements AfterViewInit {
                 // Set initial observation marker from main map if already spotted
                 let myMarker = null;
                 if (this.coords) {
-                    this.obsForm.patchValue({ geometry: this.coords });
+                    this.obsForm.patchValue({
+                        geometry: <Point>{
+                            type: 'Point',
+                            coordinates: <Position>[
+                                this.coords.x,
+                                this.coords.y,
+                            ],
+                        },
+                    });
 
                     myMarker = L.marker([this.coords.y, this.coords.x], {
                         icon: obsFormMarkerIcon,
@@ -434,7 +446,15 @@ export class ObsFormComponent implements AfterViewInit {
                         }).addTo(formMap);
                         this.coords = L.point(e.latlng.lng, e.latlng.lat);
                         this.updateMunicipality();
-                        this.obsForm.patchValue({ geometry: this.coords });
+                        this.obsForm.patchValue({
+                            geometry: <Point>{
+                                type: 'Point',
+                                coordinates: <Position>[
+                                    this.coords.x,
+                                    this.coords.y,
+                                ],
+                            },
+                        });
                     }
                 });
 
@@ -489,6 +509,7 @@ export class ObsFormComponent implements AfterViewInit {
     }
 
     patchForm(updateData): void {
+        console.log('updateData', updateData);
         const taxon = updateData.taxon || {
             media: updateData.taxref.media_url,
             taxref: updateData.taxref,
@@ -501,7 +522,12 @@ export class ObsFormComponent implements AfterViewInit {
             count: updateData.count,
             comment: updateData.comment,
             date: this.dateParser.parse(updateData.date),
-            geometry: this.data.coords ? this.coords : '',
+            geometry: this.data.coords
+                ? <Point>{
+                      type: 'Point',
+                      coordinates: <Position>[this.coords.x, this.coords.y],
+                  }
+                : '',
             id_program: updateData.program_id,
         });
     }
